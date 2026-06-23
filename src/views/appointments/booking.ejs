@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><title>Book Appointment</title></head>
+<body>
+  <h1>📅 Book a New Appointment</h1>
+  <% if (error) { %>
+    <p style="color:red; font-weight:bold;"><%= error %></p>
+  <% } %>
+  
+  <form action="/api/appointments" method="POST">
+    <!-- PATIENT DROPDOWN (instead of text box) -->
+    <label>Patient:
+      <select name="patient" required>
+        <option value="">-- Select Patient --</option>
+        <% patients.forEach(p => { %>
+          <option value="<%= p._id %>"><%= p.firstName %> <%= p.lastName %> ( <%= p.email %> )</option>
+        <% }) %>
+      </select>
+    </label><br><br>
+
+    <!-- DOCTOR DROPDOWN -->
+    <label>Doctor:
+      <select name="doctor" required>
+        <option value="">-- Select Doctor --</option>
+        <% doctors.forEach(d => { %>
+          <option value="<%= d._id %>">Dr. <%= d.firstName %> <%= d.lastName %> - <%= d.specialization %></option>
+        <% }) %>
+      </select>
+    </label><br><br>
+
+    <label>Date: <input type="date" name="date" required></label><br><br>
+    <label>Start Time: <input type="time" name="startTime" required></label><br><br>
+    <label>End Time: <input type="time" name="endTime" required></label><br><br>
+    <label>Reason: <input type="text" name="reason" required style="width:300px;"></label><br><br>
+    
+    <button type="submit">📌 Book</button>
+    <a href="/dashboard">🔙 Back</a>
+  </form>
+</body>
+</html>

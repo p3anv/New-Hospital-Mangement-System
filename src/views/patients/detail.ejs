@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title><%= patient.firstName %> <%= patient.lastName %></title></head>
+<body>
+  <h1><%= patient.firstName %> <%= patient.lastName %></h1>
+  <p>Email: <%= patient.email %></p>
+  <p>Phone: <%= patient.phone %></p>
+  <p>DOB: <%= patient.dob.toDateString() %></p>
+  <a href="/api/patients">Back to list</a>
+</body>
+</html>

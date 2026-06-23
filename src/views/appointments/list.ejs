@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Appointments</title></head>
+<body>
+  <h1>📅 Appointments</h1>
+  <a href="/appointments/new">+ Book New Appointment</a>
+  <ul>
+    <% appointments.forEach(a => { %>
+      <li>
+        <strong><%= a.patient.firstName %> <%= a.patient.lastName %></strong> 
+        with Dr. <%= a.doctor.firstName %> <%= a.doctor.lastName %> 
+        on <%= new Date(a.date).toDateString() %> at <%= a.startTime %> 
+        (<%= a.status %>)
+      </li>
+    <% }) %>
+  </ul>
+  <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hospital Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .card { border: 1px solid #ccc; padding: 20px; margin: 10px; display: inline-block; width: 200px; text-align: center; }
+    a { text-decoration: none; color: #007bff; }
+  </style>
+</head>
+<body>
+  <h1>🏥 Hospital Management System</h1>
+  <p>Welcome, <%= user ? user.email : 'Guest' %></p>
+  <div>
+    <div class="card"><a href="/api/patients">Patients</a></div>
+    <div class="card"><a href="/api/doctors">Doctors</a></div>
+    <div class="card"><a href="/api/appointments">Appointments</a></div>
+    <div class="card"><a href="/api/reports/generator">Generate Reports</a></div>
+  </div>
+</body>
+</html>

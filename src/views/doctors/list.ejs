@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><title>Doctors</title></head>
+<body>
+  <h1>Doctor List</h1>
+  <ul>
+    <% doctors.forEach(d => { %>
+      <li><%= d.firstName %> <%= d.lastName %> - <%= d.specialization %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hospital Management System</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#07111f;
+    --bg2:#0c1b2f;
+
+    --white:#ffffff;
+
+    --text:#111827;
+    --muted:#6b7280;
+
+    --line:#e5e7eb;
+
+    --blue:#2563eb;
+
+    --shadow:
+    0 25px 60px rgba(0,0,0,.08);
+
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#f7f8fb;
+    min-height:100vh;
+}
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+/* LEFT PANEL */
+
+.left{
+
+    position:relative;
+
+    width:58%;
+
+    background:
+    linear-gradient(
+    180deg,
+    #07111f 0%,
+    #0c1b2f 100%
+    );
+
+    overflow:hidden;
+
+    color:white;
+
+    padding:80px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.grid{
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(
+    rgba(255,255,255,.04) 1px,
+    transparent 1px
+    ),
+
+    linear-gradient(
+    90deg,
+    rgba(255,255,255,.04) 1px,
+    transparent 1px
+    );
+
+    background-size:40px 40px;
+
+    opacity:.35;
+
+}
+
+.blur1{
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    filter:blur(180px);
+
+    opacity:.18;
+
+    top:-100px;
+    left:-120px;
+
+}
+
+.blur2{
+
+    position:absolute;
+
+    width:450px;
+    height:450px;
+
+    border-radius:50%;
+
+    background:#3b82f6;
+
+    filter:blur(180px);
+
+    opacity:.12;
+
+    right:-150px;
+    bottom:-100px;
+}
+
+.brand{
+
+    position:relative;
+    z-index:5;
+}
+
+.logo{
+
+    width:58px;
+    height:58px;
+
+    border-radius:18px;
+
+    background:
+    rgba(255,255,255,.1);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:22px;
+    font-weight:700;
+}
+
+.company{
+
+    margin-top:18px;
+
+    font-size:15px;
+
+    color:#d1d5db;
+
+    letter-spacing:.4px;
+}
+
+.hero{
+
+    position:relative;
+    z-index:5;
+
+    margin-top:40px;
+}
+
+.hero h1{
+
+    font-size:74px;
+
+    line-height:1.05;
+
+    font-weight:800;
+
+    letter-spacing:-3px;
+}
+
+.hero p{
+
+    margin-top:28px;
+
+    color:#cbd5e1;
+
+    max-width:600px;
+
+    line-height:1.9;
+
+    font-size:17px;
+}
+
+/* KPI SECTION */
+
+.stats{
+
+    position:relative;
+
+    z-index:5;
+
+    display:flex;
+
+    gap:25px;
+
+    margin-top:70px;
+}
+
+.card{
+
+    width:180px;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    border-radius:28px;
+
+    padding:28px;
+}
+
+.card h2{
+
+    font-size:36px;
+
+    font-weight:700;
+}
+
+.card span{
+
+    display:block;
+
+    margin-top:12px;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+/* RIGHT SIDE */
+
+.right{
+
+    width:42%;
+
+    background:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:60px;
+}
+
+.login-box{
+
+    width:100%;
+    max-width:470px;
+}
+
+.topline{
+
+    color:#2563eb;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+.login-title{
+
+    margin-top:18px;
+
+    font-size:54px;
+
+    color:#111827;
+
+    font-weight:800;
+
+    letter-spacing:-2px;
+}
+
+.subtitle{
+
+    margin-top:16px;
+
+    color:#6b7280;
+
+    line-height:1.9;
+}
+
+.error{
+
+    margin-top:30px;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:#fee2e2;
+
+    color:#dc2626;
+}
+
+/* FORM */
+
+form{
+
+    margin-top:55px;
+}
+
+.input-group{
+
+    margin-bottom:40px;
+}
+
+.label{
+
+    color:#374151;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    margin-bottom:15px;
+}
+
+.input-wrapper{
+
+    position:relative;
+}
+
+.input-wrapper input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    font-size:17px;
+
+    padding-bottom:16px;
+
+    color:#111827;
+
+    background:transparent;
+
+    border-bottom:1px solid #d1d5db;
+
+    transition:.4s;
+}
+
+.input-wrapper input:focus{
+
+    border-bottom:2px solid #2563eb;
+}
+
+.toggle{
+
+    position:absolute;
+
+    right:0;
+
+    top:0;
+
+    cursor:pointer;
+
+    color:#6b7280;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+/* BUTTON */
+
+.submit-btn{
+
+    width:100%;
+
+    height:64px;
+
+    border:none;
+
+    outline:none;
+
+    cursor:pointer;
+
+    background:#111827;
+
+    color:white;
+
+    border-radius:22px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    transition:.35s;
+
+    margin-top:15px;
+}
+
+.submit-btn:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 20px 40px rgba(17,24,39,.2);
+
+    background:#000;
+}
+
+/* EXTRA LINKS */
+
+.row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:45px;
+}
+
+.remember{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#6b7280;
+
+    font-size:14px;
+}
+
+.remember input{
+
+    width:17px;
+    height:17px;
+}
+
+.register{
+
+    text-decoration:none;
+
+    color:#2563eb;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+/* ROLES */
+
+.roles{
+
+    margin-top:40px;
+
+    display:flex;
+
+    gap:14px;
+
+    flex-wrap:wrap;
+}
+
+.role{
+
+    padding:12px 18px;
+
+    border-radius:30px;
+
+    background:#f3f4f6;
+
+    color:#374151;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.role:hover{
+
+    background:#111827;
+
+    color:white;
+}
+
+/* FOOTER */
+
+.bottom{
+
+    margin-top:50px;
+
+    color:#9ca3af;
+
+    font-size:14px;
+
+    line-height:1.8;
+}
+
+/* FLOATING CARDS */
+
+.floating{
+
+    position:absolute;
+
+    z-index:6;
+
+    right:80px;
+
+    top:120px;
+}
+
+.floating-card{
+
+    width:240px;
+
+    background:
+    rgba(255,255,255,.08);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(30px);
+
+    border-radius:30px;
+
+    padding:24px;
+
+    margin-bottom:25px;
+
+    animation:float 6s ease infinite;
+}
+
+.floating-card:nth-child(2){
+
+    margin-left:-70px;
+
+    animation-delay:2s;
+}
+
+.floating-card h4{
+
+    font-size:15px;
+
+    color:#cbd5e1;
+
+    font-weight:500;
+}
+
+.floating-card h2{
+
+    margin-top:12px;
+
+    font-size:30px;
+
+    font-weight:700;
+}
+
+.floating-card p{
+
+    margin-top:10px;
+
+    color:#d1d5db;
+
+    font-size:14px;
+}
+
+@keyframes float{
+
+0%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-12px);
+}
+
+100%{
+transform:translateY(0px);
+}
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+
+.left{
+
+display:none;
+}
+
+.right{
+
+width:100%;
+}
+
+}
+
+@media(max-width:600px){
+
+.right{
+
+padding:40px;
+}
+
+.login-title{
+
+font-size:42px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="left">
+
+<div class="grid"></div>
+
+<div class="blur1"></div>
+
+<div class="blur2"></div>
+
+<div class="brand">
+
+<div class="logo">
+H
+</div>
+
+<div class="company">
+HOSPITAL MANAGEMENT SYSTEM
+</div>
+
+<div class="hero">
+
+<h1>
+Transforming<br>
+Healthcare<br>
+Operations.
+</h1>
+
+<p>
+A unified platform for appointments, medical records,
+billing, analytics and patient care management built
+for modern healthcare institutions.
+</p>
+
+<div class="stats">
+
+<div class="card">
+<h2>1M+</h2>
+<span>Patients Managed</span>
+</div>
+
+<div class="card">
+<h2>500+</h2>
+<span>Doctors</span>
+</div>
+
+<div class="card">
+<h2>99.99%</h2>
+<span>System Uptime</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="floating">
+
+<div class="floating-card">
+
+<h4>Today's Appointments</h4>
+
+<h2>248</h2>
+
+<p>Across all departments</p>
+
+</div>
+
+<div class="floating-card">
+
+<h4>Emergency Cases</h4>
+
+<h2>12</h2>
+
+<p>Immediate attention required</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<div class="login-box">
+
+<div class="topline">
+WELCOME BACK
+</div>
+
+<h1 class="login-title">
+Sign in.
+</h1>
+
+<p class="subtitle">
+Continue securely to access your healthcare dashboard.
+</p>
+
+<% if(error){ %>
+
+<div class="error">
+<%= error %>
+</div>
+
+<% } %>
+
+<form action="/auth/login" method="POST">
+
+<div class="input-group">
+
+<div class="label">
+Email Address
+</div>
+
+<div class="input-wrapper">
+
+<input
+type="email"
+name="email"
+required>
+
+</div>
+
+</div>
+
+<div class="input-group">
+
+<div class="label">
+Password
+</div>
+
+<div class="input-wrapper">
+
+<input
+type="password"
+id="password"
+name="password"
+required>
+
+<div class="toggle"
+onclick="togglePassword()">
+SHOW
+</div>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="remember">
+
+<input type="checkbox">
+
+Remember me
+
+</div>
+
+<a href="/auth/register" class="register">Create an Account</a>
+
+</div>
+
+<button class="submit-btn">
+Continue →
+</button>
+
+</form>
+
+<div class="roles">
+
+<div class="role">
+Administrator
+</div>
+
+<div class="role">
+Doctor
+</div>
+
+<div class="role">
+Receptionist
+</div>
+
+<div class="role">
+Staff
+</div>
+
+</div>
+
+<div class="bottom">
+
+© 2026 Hospital Management System<br>
+
+Enterprise Healthcare Platform
+
+</div>
+
+</div>
+
+</div>
+
+</div>

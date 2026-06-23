@@ -3,6 +3,8 @@ const appointmentService = require('../services/appointmentService');
 const doctorService = require('../services/doctorService');
 const patientService = require('../services/patientService'); // <-- ADD THIS
 
+
+
 exports.createAppointment = async (req, res) => {
   try {
     const data = { ...req.body, createdBy: req.user?.id || '000000000000000000000000' };

@@ -1,19 +1,1226 @@
-<!DOCTYPE html>
-<html>
-<head><title>Appointments</title></head>
-<body>
-  <h1>📅 Appointments</h1>
-  <a href="/appointments/new">+ Book New Appointment</a>
-  <ul>
-    <% appointments.forEach(a => { %>
-      <li>
-        <strong><%= a.patient.firstName %> <%= a.patient.lastName %></strong> 
-        with Dr. <%= a.doctor.firstName %> <%= a.doctor.lastName %> 
-        on <%= new Date(a.date).toDateString() %> at <%= a.startTime %> 
-        (<%= a.status %>)
-      </li>
-    <% }) %>
-  </ul>
-  <a href="/dashboard">Back to Dashboard</a>
-</body>
-</html>
+<%- include('../partials/header') %>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+:root{
+
+--bg:#07111f;
+--bg2:#0c1b2f;
+--blue:#2563eb;
+--green:#16a34a;
+--orange:#f59e0b;
+--red:#dc2626;
+--text:#111827;
+--muted:#6b7280;
+--white:#ffffff;
+
+}
+
+body{
+
+background:#f7f8fb;
+
+}
+
+/* HEADER */
+
+.top-section{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:40px;
+
+}
+
+.title h1{
+
+font-size:52px;
+
+font-weight:800;
+
+letter-spacing:-2px;
+
+color:var(--text);
+
+}
+
+.title p{
+
+margin-top:12px;
+
+color:var(--muted);
+
+line-height:1.8;
+
+}
+
+.new-btn{
+
+background:#07111f;
+
+color:white;
+
+padding:18px 28px;
+
+text-decoration:none;
+
+font-weight:700;
+
+border-radius:20px;
+
+transition:.3s;
+
+}
+
+.new-btn:hover{
+
+transform:translateY(-4px);
+
+color:white;
+
+}
+
+/* STATS */
+
+.stats-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(230px,1fr));
+
+gap:25px;
+
+margin-bottom:40px;
+
+}
+
+.stat-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+transition:.3s;
+
+}
+
+.stat-card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.stat-card h2{
+
+font-size:46px;
+
+font-weight:800;
+
+color:#2563eb;
+
+}
+
+.stat-card p{
+
+margin-top:12px;
+
+color:#6b7280;
+
+font-size:15px;
+
+}
+
+/* SEARCH */
+
+.search-box{
+
+margin-bottom:30px;
+
+}
+
+.search-box input{
+
+width:100%;
+
+height:70px;
+
+border:none;
+
+outline:none;
+
+padding:0 30px;
+
+font-size:16px;
+
+background:white;
+
+border-radius:30px;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.05);
+
+}
+
+/* FILTERS */
+
+.filters{
+
+display:flex;
+
+gap:15px;
+
+margin-bottom:50px;
+
+flex-wrap:wrap;
+
+}
+
+.filter{
+
+padding:14px 24px;
+
+background:white;
+
+border-radius:40px;
+
+font-weight:600;
+
+color:#6b7280;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:
+0 5px 15px rgba(0,0,0,.05);
+
+}
+
+.filter:hover{
+
+background:#2563eb;
+
+color:white;
+
+}
+
+/* MAIN GRID */
+
+.main-grid{
+
+display:grid;
+
+grid-template-columns:2fr 1fr;
+
+gap:30px;
+
+}
+
+.left-column{
+
+display:flex;
+
+flex-direction:column;
+
+gap:30px;
+
+}
+
+.right-column{
+
+display:flex;
+
+flex-direction:column;
+
+gap:30px;
+
+}
+
+/* SECTION TITLE */
+
+.section-title{
+
+font-size:30px;
+
+font-weight:800;
+
+color:#111827;
+
+margin-bottom:25px;
+
+}
+
+/* COMMON CARD */
+
+.panel{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+}
+
+@media(max-width:1100px){
+
+.main-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+</style>
+
+
+<div class="top-section">
+
+<div class="title">
+
+<h1>
+Appointments
+</h1>
+
+<p>
+
+Manage consultations, schedules and appointment history.
+
+</p>
+
+</div>
+
+<a href="/appointments/new" class="new-btn">
+
++ New Appointment
+
+</a>
+
+</div>
+
+
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+<h2>
+
+<%= appointments.length %>
+
+</h2>
+
+<p>
+
+Total Appointments
+
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>
+
+<%= appointments.filter(a=>a.status==="Scheduled").length %>
+
+</h2>
+
+<p>
+
+Scheduled
+
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>
+
+<%= appointments.filter(a=>a.status==="Completed").length %>
+
+</h2>
+
+<p>
+
+Completed
+
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>
+
+<%= appointments.filter(a=>a.status==="Cancelled").length %>
+
+</h2>
+
+<p>
+
+Cancelled
+
+</p>
+
+</div>
+
+</div>
+
+
+<div class="search-box">
+
+<input
+type="text"
+placeholder="Search patients, doctors, reasons...">
+
+</div>
+
+
+<div class="filters">
+
+<div class="filter">
+
+All
+
+</div>
+
+<div class="filter">
+
+Scheduled
+
+</div>
+
+<div class="filter">
+
+Completed
+
+</div>
+
+<div class="filter">
+
+Cancelled
+
+</div>
+
+</div>
+
+
+<div class="main-grid">
+
+<div class="left-column">
+
+<h2 class="section-title">
+
+Upcoming Appointments
+
+</h2>
+
+<!-- PART 2 STARTS HERE -->
+
+
+
+</div>
+
+
+<div class="right-column">
+
+<!-- PART 2 -->
+
+</div>
+
+</div>
+
+<style>
+
+/* APPOINTMENT CARD */
+
+.appointment-card{
+
+background:white;
+
+padding:30px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+transition:.3s;
+
+margin-bottom:25px;
+
+}
+
+.appointment-card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.patient-info h3{
+
+font-size:24px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.patient-info p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+.time-box{
+
+background:#f8fafc;
+
+padding:20px;
+
+border-radius:25px;
+
+min-width:180px;
+
+text-align:center;
+
+}
+
+.time-box h4{
+
+font-size:20px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.time-box p{
+
+margin-top:8px;
+
+color:#6b7280;
+
+}
+
+/* STATUS */
+
+.status-pill{
+
+padding:12px 22px;
+
+border-radius:30px;
+
+font-size:14px;
+
+font-weight:700;
+
+display:inline-block;
+
+margin-top:20px;
+
+}
+
+.scheduled{
+
+background:#dbeafe;
+
+color:#2563eb;
+
+}
+
+.completed{
+
+background:#dcfce7;
+
+color:#16a34a;
+
+}
+
+.cancelled{
+
+background:#fee2e2;
+
+color:#dc2626;
+
+}
+
+/* SCHEDULE */
+
+.schedule-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.schedule-row{
+
+display:flex;
+
+gap:20px;
+
+padding:20px 0;
+
+border-bottom:1px solid #e5e7eb;
+
+}
+
+.schedule-row:last-child{
+
+border:none;
+
+}
+
+.schedule-time{
+
+font-weight:800;
+
+font-size:18px;
+
+color:#2563eb;
+
+width:90px;
+
+}
+
+.schedule-details h4{
+
+font-size:18px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.schedule-details p{
+
+margin-top:8px;
+
+color:#6b7280;
+
+}
+
+/* PROGRESS */
+
+.progress-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.progress-number{
+
+font-size:60px;
+
+font-weight:800;
+
+color:#2563eb;
+
+}
+
+.progress-text{
+
+margin-top:15px;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+/* ACTIVITY */
+
+.activity-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.activity{
+
+padding:18px 0;
+
+border-bottom:1px solid #e5e7eb;
+
+}
+
+.activity:last-child{
+
+border:none;
+
+}
+
+.activity h4{
+
+font-size:17px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.activity p{
+
+margin-top:8px;
+
+color:#6b7280;
+
+}
+
+</style>
+
+<style>
+
+/* HISTORY TABLE */
+
+.history-card{
+
+margin-top:40px;
+
+background:white;
+
+padding:40px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.history-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:30px;
+
+}
+
+.history-header h2{
+
+font-size:32px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.history-header p{
+
+color:#6b7280;
+
+}
+
+.history-table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+.history-table th{
+
+padding-bottom:25px;
+
+color:#6b7280;
+
+font-size:15px;
+
+font-weight:700;
+
+text-align:left;
+
+}
+
+.history-table td{
+
+padding:25px 0;
+
+border-top:1px solid #eef2f7;
+
+font-weight:500;
+
+color:#111827;
+
+}
+
+.history-table tr{
+
+transition:.3s;
+
+}
+
+.history-table tr:hover{
+
+background:#fafbff;
+
+}
+
+/* TIMELINE */
+
+.timeline-card{
+
+margin-top:40px;
+
+background:white;
+
+padding:40px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.05);
+
+}
+
+.timeline{
+
+position:relative;
+
+margin-top:30px;
+
+}
+
+.timeline::before{
+
+content:"";
+
+position:absolute;
+
+left:10px;
+
+top:0;
+
+bottom:0;
+
+width:2px;
+
+background:#dbeafe;
+
+}
+
+.timeline-item{
+
+position:relative;
+
+padding-left:45px;
+
+margin-bottom:35px;
+
+}
+
+.timeline-dot{
+
+position:absolute;
+
+left:0;
+
+top:8px;
+
+width:20px;
+
+height:20px;
+
+background:#2563eb;
+
+border-radius:50%;
+
+}
+
+.timeline-item h4{
+
+font-size:18px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.timeline-item p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+/* FLOATING NOTIFICATION */
+
+.notify{
+
+position:fixed;
+
+bottom:30px;
+
+right:30px;
+
+background:white;
+
+padding:25px 30px;
+
+border-radius:25px;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.1);
+
+animation:slideUp 1s ease;
+
+z-index:999;
+
+}
+
+.notify h4{
+
+font-size:18px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.notify p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+}
+
+@keyframes slideUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(60px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+/* FOOTER */
+
+.footer-panel{
+
+margin-top:60px;
+
+padding:50px;
+
+background:
+linear-gradient(
+180deg,
+#07111f,
+#0c1b2f
+);
+
+border-radius:40px;
+
+color:white;
+
+}
+
+.footer-panel h1{
+
+font-size:40px;
+
+font-weight:800;
+
+}
+
+.footer-panel p{
+
+margin-top:20px;
+
+line-height:1.9;
+
+color:#cbd5e1;
+
+}
+
+.footer-panel small{
+
+display:block;
+
+margin-top:40px;
+
+color:#94a3b8;
+
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.history-table{
+
+display:block;
+
+overflow:auto;
+
+}
+
+.notify{
+
+display:none;
+
+}
+
+}
+
+</style>
+<div class="history-card">
+
+<div class="history-header">
+
+<div>
+
+<h2>
+
+Recent History
+
+</h2>
+
+<p>
+
+Appointment records and status
+
+</p>
+
+</div>
+
+</div>
+
+<table class="history-table">
+
+<thead>
+
+<tr>
+
+<th>Patient</th>
+
+<th>Doctor</th>
+
+<th>Date</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<% appointments.forEach(a=>{ %>
+
+<tr>
+
+<td>
+
+<%= a.patient.firstName %> <%= a.patient.lastName %>
+
+</td>
+
+<td>
+
+Dr. <%= a.doctor.firstName %> <%= a.doctor.lastName %>
+
+</td>
+
+<td>
+
+<%= new Date(a.date).toDateString() %>
+
+</td>
+
+<td>
+
+<span class="status-pill
+<%= a.status==='Scheduled'
+?'scheduled'
+:a.status==='Completed'
+?'completed'
+:'cancelled' %>">
+
+<%= a.status %>
+
+</span>
+
+</td>
+
+</tr>
+
+<% }) %>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="timeline-card">
+
+<h2 class="section-title">
+
+Timeline
+
+</h2>
+
+<div class="timeline">
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<h4>
+
+Patient Registered
+
+</h4>
+
+<p>
+
+09:15 AM
+
+</p>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<h4>
+
+Appointment Booked
+
+</h4>
+
+<p>
+
+10:30 AM
+
+</p>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<h4>
+
+Consultation Completed
+
+</h4>
+
+<p>
+
+03:00 PM
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const filters=document.querySelectorAll(".filter");
+
+filters.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+filters.forEach(x=>x.style.background="white");
+
+filters.forEach(x=>x.style.color="#6b7280");
+
+btn.style.background="#2563eb";
+
+btn.style.color="white";
+
+});
+
+});
+
+</script>

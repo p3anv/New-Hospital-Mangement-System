@@ -1,13 +1,373 @@
-<!DOCTYPE html>
-<html>
-<head><title>Patients</title></head>
-<body>
-  <h1>Patient List</h1>
-  <a href="/patients/new">Register New</a>
-  <ul>
-    <% patients.forEach(p => { %>
-      <li><a href="/api/patients/<%= p._id %>"><%= p.firstName %> <%= p.lastName %> - <%= p.email %></a></li>
-    <% }) %>
-  </ul>
-</body>
-</html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#f7f8fb;
+}
+
+:root{
+--bg:#07111f;
+--bg2:#0c1b2f;
+--blue:#2563eb;
+--white:#fff;
+--text:#111827;
+--muted:#6b7280;
+}
+
+/* MAIN */
+
+.container-main{
+display:flex;
+min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+width:280px;
+
+background:
+linear-gradient(
+180deg,
+#07111f,
+#0c1b2f
+);
+
+padding:40px 30px;
+
+position:fixed;
+top:0;
+bottom:0;
+
+color:white;
+
+}
+
+.logo h2{
+
+font-size:28px;
+font-weight:800;
+
+}
+
+.logo p{
+
+margin-top:10px;
+color:#cbd5e1;
+
+}
+
+.menu{
+
+margin-top:60px;
+
+display:flex;
+flex-direction:column;
+gap:15px;
+
+}
+
+.menu a{
+
+color:#d1d5db;
+
+text-decoration:none;
+
+padding:18px;
+
+border-radius:18px;
+
+transition:.3s;
+
+}
+
+.menu a:hover{
+
+background:rgba(255,255,255,.08);
+
+}
+
+/* CONTENT */
+
+.content{
+
+margin-left:280px;
+
+width:100%;
+
+padding:50px;
+
+}
+
+/* TOPBAR */
+
+.topbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:50px;
+
+}
+
+.topbar h1{
+
+font-size:48px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.add-btn{
+
+background:#111827;
+
+color:white;
+
+text-decoration:none;
+
+padding:18px 30px;
+
+border-radius:20px;
+
+font-weight:700;
+
+transition:.3s;
+
+}
+
+.add-btn:hover{
+
+transform:translateY(-4px);
+
+}
+
+/* SEARCH */
+
+.search{
+
+margin-bottom:40px;
+
+}
+
+.search input{
+
+width:100%;
+
+height:65px;
+
+border:none;
+
+outline:none;
+
+background:white;
+
+padding:0 25px;
+
+border-radius:25px;
+
+box-shadow:
+
+0 10px 30px rgba(0,0,0,.06);
+
+font-size:16px;
+
+}
+
+/* GRID */
+
+.patient-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(320px,1fr));
+
+gap:30px;
+
+}
+
+/* CARD */
+
+.patient-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+
+0 10px 35px rgba(0,0,0,.06);
+
+transition:.4s;
+
+}
+
+.patient-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:
+
+0 25px 50px rgba(0,0,0,.1);
+
+}
+
+.avatar{
+
+width:70px;
+height:70px;
+
+border-radius:50%;
+
+background:#2563eb;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+color:white;
+
+font-size:24px;
+
+font-weight:700;
+
+margin-bottom:25px;
+
+}
+
+.patient-card h3{
+
+font-size:24px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.email{
+
+margin-top:12px;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+.view-btn{
+
+display:inline-block;
+
+margin-top:25px;
+
+text-decoration:none;
+
+font-weight:700;
+
+color:#2563eb;
+
+}
+
+</style>
+
+<div class="container-main">
+
+<div class="sidebar">
+
+<div class="logo">
+
+<h2>HospitalMS</h2>
+
+<p>Enterprise Healthcare Platform</p>
+
+</div>
+
+<div class="menu">
+
+<a href="/">Dashboard</a>
+<a href="/api/patients">Patients</a>
+<a href="/api/doctors">Doctors</a>
+<a href="/api/appointments">Appointments</a>
+
+</div>
+
+</div>
+
+<div class="content">
+
+<div class="topbar">
+
+<h1>Patients</h1>
+
+<a href="/patients/new" class="add-btn">
+
++ Register Patient
+
+</a>
+
+</div>
+
+<div class="search">
+
+<input type="text" placeholder="Search patients...">
+
+</div>
+
+<div class="patient-grid">
+
+<% patients.forEach(p=>{ %>
+
+<div class="patient-card">
+
+<div class="avatar">
+
+<%= p.firstName.charAt(0) %>
+
+</div>
+
+<h3>
+
+<%= p.firstName %> <%= p.lastName %>
+
+</h3>
+
+<div class="email">
+
+<%= p.email %>
+
+</div>
+
+<a class="view-btn"
+href="/api/patients/<%= p._id %>">
+
+View Profile →
+
+</a>
+
+</div>
+
+<% }) %>
+
+</div>
+
+</div>
+
+</div>

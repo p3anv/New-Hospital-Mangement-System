@@ -1,24 +1,53 @@
+// src/services/reportService.js
+const mongoose = require('mongoose');
 const Patient = require('../models/Patient');
 const MedicalRecord = require('../models/MedicalRecord');
 const Appointment = require('../models/Appointment');
 
 class ReportService {
-  // Generate patient history summary with statistics
+  /**
+   * Generate a comprehensive patient report with visit history, diagnoses, and prescriptions
+   * @param {string} patientId - MongoDB ObjectId of the patient
+   * @param {string} startDate - optional ISO date string (YYYY-MM-DD)
+   * @param {string} endDate - optional ISO date string (YYYY-MM-DD)
+   * @returns {Object} - Patient info and summary statistics
+   */
   async generatePatientReport(patientId, startDate, endDate) {
-    const matchStage = { patient: patientId };
+    // Ensure patientId is a valid ObjectId
+    const matchStage = { patient: new mongoose.Types.ObjectId(patientId) };
+    
+    // Handle date filters with time boundaries
     if (startDate || endDate) {
       matchStage.visitDate = {};
-      if (startDate) matchStage.visitDate.$gte = new Date(startDate);
-      if (endDate) matchStage.visitDate.$lte = new Date(endDate);
+      if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        matchStage.visitDate.$gte = start;
+      }
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        matchStage.visitDate.$lte = end;
+      }
     }
 
-    // Aggregation pipeline to get records with grouped data
+    console.log('🔍 Match stage:', JSON.stringify(matchStage, null, 2));
+
+    // Aggregation pipeline
     const pipeline = [
       { $match: matchStage },
-      { $lookup: { from: 'doctors', localField: 'doctor', foreignField: '_id', as: 'doctorInfo' } },
+      { 
+        $lookup: { 
+          from: 'doctors', 
+          localField: 'doctor', 
+          foreignField: '_id', 
+          as: 'doctorInfo' 
+        } 
+      },
       { $unwind: '$doctorInfo' },
       { $sort: { visitDate: -1 } },
-      { $group: {
+      { 
+        $group: {
           _id: null,
           totalVisits: { $sum: 1 },
           prescriptions: { $push: '$prescription' },
@@ -26,13 +55,14 @@ class ReportService {
           records: { $push: '$$ROOT' }
         }
       },
-      { $project: {
+      { 
+        $project: {
           totalVisits: 1,
           prescriptions: 1,
           diagnoses: 1,
           records: 1,
-          // flatten prescriptions for statistics
-          allMedicines: { $reduce: {
+          allMedicines: { 
+            $reduce: {
               input: '$prescriptions',
               initialValue: [],
               in: { $concatArrays: ['$$value', '$$this'] }
@@ -42,9 +72,12 @@ class ReportService {
       }
     ];
 
+    console.log('🔍 Aggregation pipeline:', JSON.stringify(pipeline, null, 2));
+
     const [result] = await MedicalRecord.aggregate(pipeline);
     const patient = await Patient.findById(patientId).select('firstName lastName email phone');
 
+    // Return structured summary
     return {
       patient,
       summary: {
@@ -56,26 +89,48 @@ class ReportService {
     };
   }
 
-  // Get all patients with visit counts (for admin dashboard)
+  /**
+   * Get visit statistics for all patients (admin dashboard)
+   * @param {string} startDate - optional
+   * @param {string} endDate - optional
+   * @returns {Array} - List of patients with visit counts
+   */
   async getPatientVisitStatistics(startDate, endDate) {
     const matchStage = {};
     if (startDate || endDate) {
       matchStage.visitDate = {};
-      if (startDate) matchStage.visitDate.$gte = new Date(startDate);
-      if (endDate) matchStage.visitDate.$lte = new Date(endDate);
+      if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        matchStage.visitDate.$gte = start;
+      }
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        matchStage.visitDate.$lte = end;
+      }
     }
 
     const pipeline = [
       { $match: matchStage },
-      { $group: {
+      {
+        $group: {
           _id: '$patient',
           visitCount: { $sum: 1 },
           lastVisit: { $max: '$visitDate' }
         }
       },
-      { $lookup: { from: 'patients', localField: '_id', foreignField: '_id', as: 'patientInfo' } },
+      {
+        $lookup: {
+          from: 'patients',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'patientInfo'
+        }
+      },
       { $unwind: '$patientInfo' },
-      { $project: {
+      {
+        $project: {
           patientName: { $concat: ['$patientInfo.firstName', ' ', '$patientInfo.lastName'] },
           visitCount: 1,
           lastVisit: 1
@@ -87,18 +142,32 @@ class ReportService {
     return await MedicalRecord.aggregate(pipeline);
   }
 
-  // Appointment statistics (e.g., by doctor, by status)
+  /**
+   * Get appointment statistics grouped by status
+   * @param {string} startDate - optional
+   * @param {string} endDate - optional
+   * @returns {Array} - Status counts
+   */
   async getAppointmentStats(startDate, endDate) {
     const matchStage = {};
     if (startDate || endDate) {
       matchStage.date = {};
-      if (startDate) matchStage.date.$gte = new Date(startDate);
-      if (endDate) matchStage.date.$lte = new Date(endDate);
+      if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        matchStage.date.$gte = start;
+      }
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        matchStage.date.$lte = end;
+      }
     }
 
     const pipeline = [
       { $match: matchStage },
-      { $group: {
+      {
+        $group: {
           _id: '$status',
           count: { $sum: 1 }
         }

@@ -13,6 +13,13 @@ class DoctorService {
     // Return availability for that day (implementation based on your schedule)
     return doctor.availability;
   }
+
+  // Add this method to the DoctorService class
+async getDoctorByEmail(email) {
+  return await Doctor.findOne({ email });
 }
+}
+
+
 
 module.exports = new DoctorService();

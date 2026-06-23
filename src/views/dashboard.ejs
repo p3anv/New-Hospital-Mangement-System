@@ -1,21 +1,1678 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Hospital Dashboard</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    .card { border: 1px solid #ccc; padding: 20px; margin: 10px; display: inline-block; width: 200px; text-align: center; }
-    a { text-decoration: none; color: #007bff; }
-  </style>
-</head>
-<body>
-  <h1>🏥 Hospital Management System</h1>
-  <p>Welcome, <%= user ? user.email : 'Guest' %></p>
-  <div>
-    <div class="card"><a href="/api/patients">Patients</a></div>
-    <div class="card"><a href="/api/doctors">Doctors</a></div>
-    <div class="card"><a href="/api/appointments">Appointments</a></div>
-    <div class="card"><a href="/api/reports/generator">Generate Reports</a></div>
-  </div>
-</body>
-</html>
+<!-- <%- include('partials/header') %> -->
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+:root{
+
+--bg:#07111f;
+--bg2:#0c1b2f;
+--blue:#2563eb;
+--white:#ffffff;
+--text:#111827;
+--muted:#6b7280;
+--line:#e5e7eb;
+
+}
+
+body{
+
+background:#f7f8fb;
+overflow-x:hidden;
+
+}
+
+/* ===== MAIN LAYOUT ===== */
+
+.dashboard{
+
+display:flex;
+min-height:100vh;
+
+}
+
+/* ===== SIDEBAR ===== */
+
+.sidebar{
+
+width:290px;
+
+background:
+linear-gradient(
+180deg,
+#07111f,
+#0c1b2f
+);
+
+position:fixed;
+
+left:0;
+top:0;
+bottom:0;
+
+padding:40px 30px;
+
+color:white;
+
+overflow:hidden;
+
+}
+
+.sidebar::before{
+
+content:"";
+
+position:absolute;
+
+width:500px;
+height:500px;
+
+background:#2563eb;
+
+border-radius:50%;
+
+filter:blur(180px);
+
+top:-200px;
+left:-200px;
+
+opacity:.15;
+
+}
+
+.logo{
+
+position:relative;
+
+z-index:2;
+
+margin-bottom:60px;
+
+}
+
+.logo h2{
+
+font-size:28px;
+
+font-weight:800;
+
+letter-spacing:-1px;
+
+}
+
+.logo p{
+
+margin-top:10px;
+
+color:#cbd5e1;
+
+font-size:14px;
+
+}
+
+/* ===== MENU ===== */
+
+.menu{
+
+position:relative;
+
+z-index:2;
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.menu a{
+
+color:#d1d5db;
+
+text-decoration:none;
+
+padding:18px 22px;
+
+border-radius:18px;
+
+font-weight:500;
+
+transition:.3s;
+
+}
+
+.menu a:hover{
+
+background:
+rgba(255,255,255,.08);
+
+transform:translateX(6px);
+
+}
+
+.active-menu{
+
+background:
+rgba(255,255,255,.12);
+
+}
+
+/* ===== CONTENT ===== */
+
+.content{
+
+margin-left:290px;
+
+width:100%;
+
+padding:45px 50px;
+
+}
+
+/* ===== TOPBAR ===== */
+
+.topbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:50px;
+
+}
+
+.heading h1{
+
+font-size:45px;
+
+font-weight:800;
+
+letter-spacing:-2px;
+
+color:#111827;
+
+}
+
+.heading p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+/* ===== PROFILE ===== */
+
+.profile{
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+}
+
+.avatar{
+
+width:60px;
+height:60px;
+
+border-radius:50%;
+
+background:#2563eb;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+font-size:22px;
+
+font-weight:700;
+
+color:white;
+
+box-shadow:
+
+0 15px 30px rgba(37,99,235,.3);
+
+}
+
+.user-info h4{
+
+font-size:18px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.user-info p{
+
+color:#6b7280;
+
+margin-top:5px;
+
+}
+
+/* ===== ROLE BADGE ===== */
+
+.role-badge{
+
+display:inline-block;
+
+margin-top:10px;
+
+padding:10px 20px;
+
+border-radius:40px;
+
+background:#dbeafe;
+
+color:#2563eb;
+
+font-size:14px;
+
+font-weight:700;
+
+}
+
+/* ===== SECTION TITLE ===== */
+
+.section-title{
+
+font-size:28px;
+
+font-weight:800;
+
+color:#111827;
+
+margin-bottom:30px;
+
+}
+
+/* ===== GRID ===== */
+
+.card-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:30px;
+
+}
+
+/* ===== PREMIUM CARD ===== */
+
+.card-box{
+
+background:white;
+
+padding:35px;
+
+border-radius:30px;
+
+box-shadow:
+
+0 10px 35px rgba(0,0,0,.06);
+
+transition:.4s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.card-box::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:0;
+
+width:100%;
+height:5px;
+
+background:
+
+linear-gradient(
+90deg,
+#2563eb,
+#3b82f6
+);
+
+}
+
+.card-box:hover{
+
+transform:translateY(-10px);
+
+box-shadow:
+
+0 25px 50px rgba(0,0,0,.1);
+
+}
+
+/* ===== ICON ===== */
+
+.card-icon{
+
+width:80px;
+height:80px;
+
+border-radius:25px;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+font-size:32px;
+
+margin-bottom:25px;
+
+}
+
+.blue{
+
+background:#dbeafe;
+color:#2563eb;
+
+}
+
+.green{
+
+background:#d1fae5;
+color:#10b981;
+
+}
+
+.orange{
+
+background:#fef3c7;
+color:#f59e0b;
+
+}
+
+.red{
+
+background:#fee2e2;
+color:#ef4444;
+
+}
+
+.card-box h2{
+
+font-size:32px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.card-box p{
+
+margin-top:12px;
+
+line-height:1.8;
+
+color:#6b7280;
+
+}
+
+.card-box a{
+
+display:inline-block;
+
+margin-top:20px;
+
+text-decoration:none;
+
+font-weight:700;
+
+color:#2563eb;
+
+}
+
+/* animation */
+
+.card-box{
+
+animation:fadeUp .8s ease;
+
+}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+@media(max-width:1000px){
+
+.sidebar{
+
+display:none;
+
+}
+
+.content{
+
+margin-left:0;
+
+}
+
+.topbar{
+
+flex-direction:column;
+align-items:flex-start;
+gap:30px;
+
+}
+
+}
+
+</style>
+
+<div class="dashboard">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">
+
+<h2>HospitalMS</h2>
+
+<p>Enterprise Healthcare Platform</p>
+
+</div>
+
+<div class="menu">
+
+<a class="active-menu" href="#">Dashboard</a>
+
+<a href="/api/patients">Patients</a>
+
+<a href="/api/doctors">Doctors</a>
+
+<a href="/api/appointments">Appointments</a>
+
+<a href="/api/reports/generator">Reports</a>
+
+<a href="/auth/logout">Logout   </a>
+
+</div>
+
+</div>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+<div class="topbar">
+
+<div class="heading">
+
+<h1>
+Welcome, <%= user.name %>
+</h1>
+
+<p>
+Manage patients, doctors and appointments from a unified healthcare platform.
+</p>
+
+<span class="role-badge">
+<%= user.role %>
+</span>
+
+</div>
+
+<div class="profile">
+
+<div class="avatar">
+
+<%= user.name.charAt(0).toUpperCase() %>
+
+</div>
+
+<div class="user-info">
+
+<h4>
+<%= user.name %>
+</h4>
+
+<p>
+Healthcare Administrator
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<h2 class="section-title">
+Overview
+</h2>
+
+<div class="card-grid">
+
+<!-- Patients -->
+
+<div class="card-box">
+
+<div class="card-icon blue">
+
+👥
+
+</div>
+
+<h2>Patients</h2>
+
+<p>
+Manage patient records and registration information.
+
+</p>
+
+<a href="/api/patients">
+
+View →
+
+</a>
+
+</div>
+
+<!-- Doctors -->
+
+<div class="card-box">
+
+<div class="card-icon green">
+
+🩺
+
+</div>
+
+<h2>Doctors</h2>
+
+<p>
+View doctor profiles and department information.
+
+</p>
+
+<a href="/api/doctors">
+
+View →
+
+</a>
+
+</div>
+<!-- Appointments -->
+
+<div class="card-box">
+
+<div class="card-icon orange">
+
+📅
+
+</div>
+
+<h2>Appointments</h2>
+
+<p>
+
+Schedule and manage patient visits and consultations.
+
+</p>
+
+<a href="/api/appointments">
+
+View →
+
+</a>
+
+</div>
+
+<!-- Reports -->
+
+<div class="card-box">
+
+<div class="card-icon red">
+
+📄
+
+</div>
+
+<h2>Reports</h2>
+
+<p>
+
+Generate patient summaries and analytical reports.
+
+</p>
+
+<a href="/api/reports/generator">
+
+View →
+
+</a>
+
+</div>
+
+</div>
+
+<!-- ===== ANALYTICS SECTION ===== -->
+
+<h2 class="section-title"
+style="margin-top:70px;">
+Analytics
+</h2>
+
+<style>
+
+.analytics-grid{
+
+display:grid;
+
+grid-template-columns:
+2fr 1fr;
+
+gap:30px;
+
+margin-top:30px;
+
+}
+
+.big-card{
+
+background:white;
+
+padding:40px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.06);
+
+}
+
+.big-card h3{
+
+font-size:26px;
+
+font-weight:800;
+
+color:#111827;
+
+}
+
+.big-card p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+.metric-row{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-top:40px;
+
+}
+
+.metric{
+
+text-align:center;
+
+}
+
+.metric h1{
+
+font-size:50px;
+
+font-weight:800;
+
+color:#2563eb;
+
+}
+
+.metric p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+}
+
+.activity-list{
+
+margin-top:30px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+.activity{
+
+padding:20px;
+
+border-radius:22px;
+
+background:#f7f8fb;
+
+transition:.3s;
+
+}
+
+.activity:hover{
+
+transform:translateY(-4px);
+
+}
+
+.activity h4{
+
+font-size:17px;
+
+color:#111827;
+
+font-weight:700;
+
+}
+
+.activity p{
+
+margin-top:8px;
+
+color:#6b7280;
+
+}
+
+.table-card{
+
+margin-top:60px;
+
+background:white;
+
+padding:40px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.06);
+
+}
+
+.table-card h2{
+
+font-size:30px;
+
+font-weight:800;
+
+margin-bottom:30px;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+th{
+
+text-align:left;
+
+padding-bottom:25px;
+
+color:#6b7280;
+
+font-weight:600;
+
+}
+
+td{
+
+padding:20px 0;
+
+border-top:1px solid #e5e7eb;
+
+color:#111827;
+
+font-weight:500;
+
+}
+
+.status{
+
+padding:10px 18px;
+
+border-radius:30px;
+
+font-size:14px;
+
+font-weight:700;
+
+}
+
+.done{
+
+background:#dcfce7;
+
+color:#16a34a;
+
+}
+
+.pending{
+
+background:#fef3c7;
+
+color:#ca8a04;
+
+}
+
+@media(max-width:1100px){
+
+.analytics-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.metric-row{
+
+flex-direction:column;
+
+gap:30px;
+
+}
+
+}
+
+</style>
+
+<div class="analytics-grid">
+
+<div class="big-card">
+
+<h3>
+Hospital Statistics
+</h3>
+
+<p>
+
+Performance overview across departments.
+
+</p>
+
+<div class="metric-row">
+
+<div class="metric">
+
+<h1>1,258</h1>
+
+<p>Patients</p>
+
+</div>
+
+<div class="metric">
+
+<h1>84</h1>
+
+<p>Doctors</p>
+
+</div>
+
+<div class="metric">
+
+<h1>372</h1>
+
+<p>Appointments</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="big-card">
+
+<h3>
+Recent Activity
+</h3>
+
+<div class="activity-list">
+
+<div class="activity">
+
+<h4>
+New patient registered
+</h4>
+
+<p>
+10 minutes ago
+</p>
+
+</div>
+
+<div class="activity">
+
+<h4>
+Appointment completed
+</h4>
+
+<p>
+35 minutes ago
+</p>
+
+</div>
+
+<div class="activity">
+
+<h4>
+Doctor profile updated
+</h4>
+
+<p>
+1 hour ago
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="table-card">
+
+<h2>
+
+Upcoming Appointments
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Patient</th>
+
+<th>Doctor</th>
+
+<th>Department</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Rahul Sharma</td>
+
+<td>Dr. Singh</td>
+
+<td>Cardiology</td>
+
+<td>
+
+<span class="status done">
+
+Confirmed
+
+</span>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Priya Patel</td>
+
+<td>Dr. Verma</td>
+
+<td>Neurology</td>
+
+<td>
+
+<span class="status pending">
+
+Pending
+
+</span>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Amit Kumar</td>
+
+<td>Dr. Mehta</td>
+
+<td>Orthopedics</td>
+
+<td>
+
+<span class="status done">
+
+Confirmed
+
+</span>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+<!-- ===== FLOATING WIDGETS ===== -->
+
+<style>
+
+.widgets{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:30px;
+
+margin-top:60px;
+
+}
+
+.widget{
+
+background:white;
+
+padding:35px;
+
+border-radius:35px;
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.06);
+
+transition:.4s;
+
+}
+
+.widget:hover{
+
+transform:translateY(-8px);
+
+}
+
+.widget h2{
+
+font-size:28px;
+
+font-weight:800;
+
+color:#111827;
+
+margin-bottom:30px;
+
+}
+
+/* CALENDAR */
+
+.calendar-day{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px;
+
+background:#f7f8fb;
+
+border-radius:20px;
+
+margin-bottom:15px;
+
+}
+
+.calendar-day h4{
+
+font-size:17px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.calendar-day p{
+
+color:#6b7280;
+
+}
+
+/* QUICK ACTIONS */
+
+.actions{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:20px;
+
+}
+
+.action{
+
+background:#f7f8fb;
+
+border-radius:25px;
+
+padding:25px;
+
+cursor:pointer;
+
+transition:.35s;
+
+}
+
+.action:hover{
+
+background:#2563eb;
+
+transform:translateY(-5px);
+
+}
+
+.action:hover h3,
+.action:hover p{
+
+color:white;
+
+}
+
+.action h3{
+
+font-size:18px;
+
+font-weight:700;
+
+color:#111827;
+
+transition:.3s;
+
+}
+
+.action p{
+
+margin-top:10px;
+
+line-height:1.7;
+
+color:#6b7280;
+
+transition:.3s;
+
+}
+
+/* NOTIFICATION */
+
+.notification{
+
+position:fixed;
+
+top:40px;
+
+right:40px;
+
+background:white;
+
+padding:20px 30px;
+
+border-radius:25px;
+
+box-shadow:
+
+0 20px 50px rgba(0,0,0,.1);
+
+animation:slideDown 1s ease;
+
+z-index:100;
+
+}
+
+.notification h4{
+
+font-size:16px;
+
+font-weight:700;
+
+color:#111827;
+
+}
+
+.notification p{
+
+margin-top:10px;
+
+color:#6b7280;
+
+}
+
+@keyframes slideDown{
+
+from{
+
+opacity:0;
+transform:translateY(-50px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+/* FOOTER */
+
+.footer{
+
+margin-top:80px;
+
+padding:50px;
+
+background:
+
+linear-gradient(
+180deg,
+#07111f,
+#0c1b2f
+);
+
+border-radius:40px;
+
+color:white;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.footer::before{
+
+content:"";
+
+position:absolute;
+
+width:400px;
+height:400px;
+
+border-radius:50%;
+
+background:#2563eb;
+
+filter:blur(160px);
+
+right:-150px;
+top:-100px;
+
+opacity:.2;
+
+}
+
+.footer h1{
+
+position:relative;
+
+font-size:38px;
+
+font-weight:800;
+
+color:white;
+
+letter-spacing:-1px;
+
+}
+
+.footer p{
+
+position:relative;
+
+margin-top:20px;
+
+line-height:1.9;
+
+color:#d1d5db;
+
+}
+
+.footer small{
+
+position:relative;
+
+display:block;
+
+margin-top:40px;
+
+color:#94a3b8;
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+.widgets{
+
+grid-template-columns:1fr;
+
+}
+
+.actions{
+
+grid-template-columns:1fr;
+
+}
+
+.notification{
+
+display:none;
+
+}
+
+}
+
+</style>
+
+<!-- NOTIFICATION -->
+
+<div class="notification">
+
+<h4>
+🔔 System Healthy
+</h4>
+
+<p>
+All hospital services are operational.
+</p>
+
+</div>
+
+<!-- WIDGETS -->
+
+<div class="widgets">
+
+<!-- CALENDAR -->
+
+<div class="widget">
+
+<h2>
+Today's Schedule
+</h2>
+
+<div class="calendar-day">
+
+<div>
+
+<h4>09:00 AM</h4>
+
+<p>Dr. Singh • Cardiology</p>
+
+</div>
+
+</div>
+
+<div class="calendar-day">
+
+<div>
+
+<h4>11:30 AM</h4>
+
+<p>Dr. Mehta • Orthopedics</p>
+
+</div>
+
+</div>
+
+<div class="calendar-day">
+
+<div>
+
+<h4>03:00 PM</h4>
+
+<p>Dr. Verma • Neurology</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- QUICK ACTIONS -->
+
+<div class="widget">
+
+<h2>
+
+Quick Actions
+
+</h2>
+
+<div class="actions">
+
+<div class="action">
+
+<h3>
+
+Register Patient
+
+</h3>
+
+<p>
+
+Create new patient profile.
+
+</p>
+
+</div>
+
+<div class="action">
+
+<h3>
+
+Book Appointment
+
+</h3>
+
+<p>
+
+Schedule doctor visits.
+
+</p>
+
+</div>
+
+<div class="action">
+
+<h3>
+
+Generate Report
+
+</h3>
+
+<p>
+
+Export patient summaries.
+
+</p>
+
+</div>
+
+<div class="action">
+
+<h3>
+
+Manage Doctors
+
+</h3>
+
+<p>
+
+Update doctor records.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<h1>
+
+Hospital Management System
+
+</h1>
+
+<p>
+
+Secure enterprise platform designed for healthcare institutions,
+enabling patient management, appointment scheduling,
+medical records and analytics from a unified dashboard.
+
+</p>
+
+<small>
+
+© 2026 Hospital Management System • Enterprise Edition
+
+</small>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* smooth card animation */
+
+document.querySelectorAll(".card-box").forEach(card=>{
+
+card.addEventListener("mouseenter",()=>{
+
+card.style.transition=".4s";
+
+});
+
+});
+
+/* animated counters */
+
+function animateCounter(element,target){
+
+let count=0;
+
+let speed=target/60;
+
+let interval=setInterval(()=>{
+
+count+=speed;
+
+if(count>=target){
+
+count=target;
+
+clearInterval(interval);
+
+}
+
+element.innerText=Math.floor(count).toLocaleString();
+
+},20);
+
+}
+
+const metrics=document.querySelectorAll(".metric h1");
+
+animateCounter(metrics[0],1258);
+animateCounter(metrics[1],84);
+animateCounter(metrics[2],372);
+
+</script>
+
+<%- include('partials/footer') %>

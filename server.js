@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');  // <-- NEW
 const flash = require('connect-flash');      // <-- NEW
 
-app.set('trust proxy', 1);
+
 // Import routes
 const authRoutes = require('./src/routes/authRoutes');
 const patientRoutes = require('./src/routes/patientRoutes');
@@ -31,7 +31,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+app.set('trust proxy', 1);
 // ---- SESSION & FLASH ----
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your_secret_key_here',

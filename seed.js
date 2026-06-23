@@ -11,7 +11,7 @@ const Appointment = require('./src/models/Appointment');
 const MedicalRecord = require('./src/models/MedicalRecord');
 
 // MongoDB connection string
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hospital_db';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://pranavDB:KnVfL87DQjrXME4u@cluster0.vx7hlnf.mongodb.net/';
 
 // ============================================================
 //  SEED DATA

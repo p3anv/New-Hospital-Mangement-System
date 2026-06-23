@@ -82,7 +82,7 @@ A full-scale, enterprise-grade Hospital Management System built with Node.js, Ex
 
 ## 🌐 Live Demo
 
-🔗 **Live URL:** [https://new-hospital-management-system.onrender.com](https://new-hospital-management-system.onrender.com)
+🔗 **Live URL:** [[https://new-hospital-management-system.onrender.com](https://new-hospital-mangement-system.onrender.com)](https://new-hospital-management-system.onrender.com)
 
 ### Test Credentials
 

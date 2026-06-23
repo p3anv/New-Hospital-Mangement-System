@@ -77,7 +77,13 @@ app.use('/api/reports', protect, reportRoutes);
 
 
 // ---- VIEW ROUTES ----
-app.get('/', (req, res) => res.redirect('/dashboard'));
+app.get('/', (req, res) => {
+  if (req.user) {
+    res.redirect('/dashboard');
+  } else {
+    res.redirect('/auth/login');
+  }
+});
 app.get('/dashboard', protect, (req, res) => {
   res.render('dashboard', { user: req.user });
 });

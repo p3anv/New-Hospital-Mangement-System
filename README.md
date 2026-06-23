@@ -13,11 +13,10 @@ A full-scale, enterprise-grade Hospital Management System built with Node.js, Ex
 - [Environment Variables](#environment-variables)
 - [Database Seeding](#database-seeding)
 - [API Endpoints](#api-endpoints)
-- [Project Structure](#project-structure)
 - [Screenshots](#screenshots)
 - [Deployment](#deployment)
 - [Future Improvements](#future-improvements)
-- [License](#license)
+
 
 ---
 
@@ -239,19 +238,17 @@ node seed.js
 ## 📸 Screenshots
 
 ### Login Page
-![Login](screenshots/login.png)
+![Login](screenshots/Login Page.png)
 
 ### Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/Dashboard.png)
 
 ### Appointment Booking
-![Booking](screenshots/booking.png)
+![Booking](screenshots/Appointments.png)
 
 ### Report Generator
-![Report](screenshots/report.png)
+![Report](screenshots/Report Center.png)
 
-### Patient Report with PDF Download
-![PDF Report](screenshots/pdf-report.png)
 
 ---
 

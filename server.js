@@ -74,7 +74,7 @@ app.use('/api/doctors', protect, doctorRoutes);
 app.use('/api/appointments', protect, appointmentRoutes);
 app.use('/api/records', protect, medicalRecordRoutes);
 app.use('/api/reports', protect, reportRoutes);
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ---- VIEW ROUTES ----
 app.get('/', (req, res) => {

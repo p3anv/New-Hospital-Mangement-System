@@ -306,7 +306,7 @@ git push heroku main
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/p3anv)
+- GitHub: [@p3anv](https://github.com/p3anv)
 
 
 ---

@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');  // <-- NEW
 const flash = require('connect-flash');      // <-- NEW
 
+app.set('trust proxy', 1);
 // Import routes
 const authRoutes = require('./src/routes/authRoutes');
 const patientRoutes = require('./src/routes/patientRoutes');
@@ -52,6 +53,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // ========================
 //  DATABASE CONNECTION
 // ========================
@@ -72,6 +74,7 @@ app.use('/api/doctors', protect, doctorRoutes);
 app.use('/api/appointments', protect, appointmentRoutes);
 app.use('/api/records', protect, medicalRecordRoutes);
 app.use('/api/reports', protect, reportRoutes);
+
 
 // ---- VIEW ROUTES ----
 app.get('/', (req, res) => res.redirect('/dashboard'));

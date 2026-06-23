@@ -238,7 +238,7 @@ node seed.js
 ## 📸 Screenshots
 
 ### Login Page
-![Login](screenshots/Login Page.png)
+![Login](screenshots/Login.png)
 
 ### Dashboard
 ![Dashboard](screenshots/Dashboard.png)
@@ -247,7 +247,7 @@ node seed.js
 ![Booking](screenshots/Appointments.png)
 
 ### Report Generator
-![Report](screenshots/Report Center.png)
+![Report](screenshots/Report.png)
 
 
 ---
